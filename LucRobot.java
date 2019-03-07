@@ -1,4 +1,5 @@
 import robocode.HitWallEvent;
+import robocode.util.*;
 import robocode.Robot;
 import robocode.Rules;
 import robocode.ScannedRobotEvent;
@@ -20,18 +21,18 @@ public class LucRobot extends Robot {
 		while (true) {
 			if (scannedLastLoop) {
 				scannedLastLoop = false;
-				if (getGunHeading() - targetLocation > 180) {
-					turnGunRight(360 - getGunHeading() - targetLocation);
+				if (getGunHeading() - aimpoint > 180) {
+					turnGunRight(360 - getGunHeading() - aimpoint);
 					
-				} else if (getGunHeading() - targetLocation < 0) {
-					if (getGunHeading() - targetLocation > -180) {
-						turnGunLeft(getGunHeading() - targetLocation);
+				} else if (getGunHeading() - aimpoint < 0) {
+					if (getGunHeading() - aimpoint > -180) {
+						turnGunLeft(getGunHeading() - aimpoint);
 					} else {
-						turnGunLeft(360 - Math.abs(getGunHeading() - targetLocation));
+						turnGunLeft(360 - Math.abs(getGunHeading() - aimpoint));
 					}
 					
 				} else {
-					turnGunLeft(getGunHeading() - targetLocation);	
+					turnGunLeft(getGunHeading() - aimpoint);	
 					
 				}
 				if (getRadarHeading() - targetLocation > 180) {
@@ -53,8 +54,6 @@ public class LucRobot extends Robot {
 			} else {
 				turnRadarRight(90);
 			}
-			turnRight(getHeading() - targetLocation);
-			ahead(10);
 		}
 	}
 	
@@ -68,18 +67,18 @@ public class LucRobot extends Robot {
 		double flightTime = targetDistance/bulletSpeed;
 		double distanceToTravel = targetSpeed * flightTime;
 		
-		double targetPosition[] = {targetDistance * Math.cos(Math.toRadians(targetLocation)), targetDistance * Math.sin(Math.toRadians(targetLocation))};
-		double targetNewPos[] = {distanceToTravel * Math.cos(Math.toRadians(targetHeading-90)), distanceToTravel * Math.sin(Math.toRadians(targetHeading-90))};
-		double aimpointPos[] = {targetPosition[0] + targetNewPos[0], targetPosition[1] + targetNewPos[1]};
-		aimpoint = Math.toDegrees(Math.atan(aimpointPos[1]/aimpointPos[0]));
+		double[] targetPosition = {targetDistance * Math.sin(Math.toRadians(targetLocation)), targetDistance * Math.cos(Math.toRadians(targetLocation))};
+		double[] targetNewPos = {distanceToTravel * Math.sin(Math.toRadians(targetHeading)), distanceToTravel * Math.cos(Math.toRadians(targetHeading))};
+		double[] aimpointPos = {targetPosition[0] + targetNewPos[0], targetPosition[1] + targetNewPos[1]};
+		aimpoint = Math.toDegrees(Utils.normalAbsoluteAngle(Math.atan2(aimpointPos[0], aimpointPos[1])));
 		if (e.getBearing() > 180) {
 			aimpoint += 180;
 		}
 		if (targetLocation < 0) targetLocation += 360;
-		//System.out.println("TargetPos: " + targetPosition[0] + ", " + targetPosition[1]);
-		//System.out.println("Target Movement Vector: " + targetNewPos[0] + ", " + targetNewPos[1]);
-		//System.out.println("Aimpoint Pos Vector: " + aimpointPos[0] + ", " + aimpointPos[1]);
-		//System.out.println("Aimpoint angle: " + aimpoint);
+		System.out.println("TargetPos: " + targetPosition[0] + ", " + targetPosition[1]);
+		System.out.println("Target Movement Vector: " + targetNewPos[0] + ", " + targetNewPos[1]);
+		System.out.println("Aimpoint Pos Vector: " + aimpointPos[0] + ", " + aimpointPos[1]);
+		System.out.println("Aimpoint angle: " + aimpoint);
 
 		fire(1);
 		scannedLastLoop = true;
