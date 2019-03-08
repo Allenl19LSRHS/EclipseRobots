@@ -1,6 +1,6 @@
+import robocode.Robot;
 import robocode.HitWallEvent;
 import robocode.util.*;
-import robocode.Robot;
 import robocode.Rules;
 import robocode.ScannedRobotEvent;
 
@@ -9,7 +9,8 @@ public class LucRobot extends Robot {
 	double targetLocation = 0;
 	double aimpoint = 0;
 	boolean scannedLastLoop = false;
-	double bulletSpeed = Rules.getBulletSpeed(1);
+	double bulletSpeed = Rules.getBulletSpeed(2);
+	boolean canFire = true;
 
 	public void run() {
 		setAdjustGunForRobotTurn(true);
@@ -35,6 +36,9 @@ public class LucRobot extends Robot {
 					turnGunLeft(getGunHeading() - aimpoint);	
 					
 				}
+				if (canFire)
+					fire(2);
+					
 				if (getRadarHeading() - targetLocation > 180) {
 					turnRadarRight(360 - getRadarHeading() - targetLocation);
 					
@@ -42,18 +46,21 @@ public class LucRobot extends Robot {
 					if (getRadarHeading() - targetLocation > -180) {
 						turnRadarLeft(getRadarHeading() - targetLocation);
 					} else {
-						turnRadarLeft(360 - Math.abs(getRadarHeading() - targetLocation));
+						turnRadarRight(360 - Math.abs(getRadarHeading() - targetLocation));
 					}
 					
 				} else {
 					turnRadarLeft(getRadarHeading() - targetLocation);
 				}
+				System.out.println(getGunHeading());
 				turnRadarRight(7);
 				turnRadarLeft(14);
 				turnRadarRight(7);
 			} else {
 				turnRadarRight(90);
 			}
+
+			ahead(10);
 		}
 	}
 	
@@ -75,17 +82,17 @@ public class LucRobot extends Robot {
 			aimpoint += 180;
 		}
 		if (targetLocation < 0) targetLocation += 360;
-		System.out.println("TargetPos: " + targetPosition[0] + ", " + targetPosition[1]);
-		System.out.println("Target Movement Vector: " + targetNewPos[0] + ", " + targetNewPos[1]);
-		System.out.println("Aimpoint Pos Vector: " + aimpointPos[0] + ", " + aimpointPos[1]);
+		if (targetDistance < 500) canFire = true; else canFire = false;
+		//System.out.println("TargetPos: " + targetPosition[0] + ", " + targetPosition[1]);
+		//System.out.println("Target Movement Vector: " + targetNewPos[0] + ", " + targetNewPos[1]);
+		//System.out.println("Aimpoint Pos Vector: " + aimpointPos[0] + ", " + aimpointPos[1]);
 		System.out.println("Aimpoint angle: " + aimpoint);
 
-		fire(1);
 		scannedLastLoop = true;
 	}
 	
 	public void onHitWall(HitWallEvent e) {
-		back(20);
-		turnRight(180);
+		back(16);
+		turnRight(135);
 	}
 }
