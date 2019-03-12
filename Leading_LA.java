@@ -22,13 +22,15 @@ public class Leading_LA extends Robot {
 			if (scannedLastLoop) {
 				scannedLastLoop = false;
 				turnGunRight(Utils.normalRelativeAngleDegrees(-getGunHeading() + aimpoint));
-				if (canFire)
-					fire(2);
 				turnRadarRight(Utils.normalRelativeAngleDegrees(-getRadarHeading() + targetLocation));
 				System.out.println(getGunHeading());
 				turnRadarRight(7);
 				turnRadarLeft(14);
 				turnRadarRight(7);
+				if (canFire) {
+					fire(2);
+					ahead(10);
+				}
 			} else {
 				turnRadarRight(90);
 			}
@@ -48,7 +50,7 @@ public class Leading_LA extends Robot {
 		double[] targetPosition = {targetDistance * Math.sin(Math.toRadians(targetLocation)), targetDistance * Math.cos(Math.toRadians(targetLocation))};
 		double[] targetNewPos = {distanceToTravel * Math.sin(Math.toRadians(targetHeading)), distanceToTravel * Math.cos(Math.toRadians(targetHeading))};
 		double[] aimpointPos = {targetPosition[0] + targetNewPos[0], targetPosition[1] + targetNewPos[1]};
-		aimpoint = Math.toDegrees(Utils.normalAbsoluteAngle(Math.atan2(aimpointPos[0], aimpointPos[1])));
+		aimpoint = Math.toDegrees(Utils.normalAbsoluteAngleDegrees(Math.atan2(aimpointPos[0], aimpointPos[1])));
 		if (e.getBearing() > 180) {
 			aimpoint += 180;
 		}
