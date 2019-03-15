@@ -10,8 +10,7 @@ public class Leading_LA extends Robot {
 	boolean scannedLastLoop = false;
 	double bulletSpeed = Rules.getBulletSpeed(2);
 	boolean canFire = true;
-	double aimpointDistance;
-
+	
 	public void run() {
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);
@@ -50,7 +49,6 @@ public class Leading_LA extends Robot {
 		double[] targetPosition = {targetDistance * Math.sin(Math.toRadians(targetLocation)), targetDistance * Math.cos(Math.toRadians(targetLocation))};
 		double[] targetNewPos = {distanceToTravel * Math.sin(Math.toRadians(targetHeading)), distanceToTravel * Math.cos(Math.toRadians(targetHeading))};
 		double[] aimpointPos = {targetPosition[0] + targetNewPos[0], targetPosition[1] + targetNewPos[1]};
-		aimpointDistance = Math.sqrt(aimpointPos[1] * aimpointPos[1] + aimpointPos[0] * aimpointPos[0]);
 		aimpoint = Math.toDegrees(Utils.normalAbsoluteAngleDegrees(Math.atan2(aimpointPos[0], aimpointPos[1])));
 		if (e.getBearing() > 180) {
 			aimpoint += 180;
